@@ -1,0 +1,7 @@
+nginx_version: 1.24.0-2ubuntu7.6
+nginx_base_dir: /etc/nginx
+nginx_main_config_path: "{{ nginx_base_dir }}/nginx.conf"
+nginx_config_list:
+  - "{{ nginx_main_config_path }}"
+nginx_file_owner: root
+nginx_file_group: root

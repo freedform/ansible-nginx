@@ -1,0 +1,9 @@
+nginx_supported_actions:
+  - install
+  - deploy_config
+  - state_control
+nginx_supported_states:
+  - started
+  - stopped
+  - restarted
+  - reloaded

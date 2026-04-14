@@ -1,0 +1,16 @@
+- name: Validate variables for install.yml task
+  ansible.builtin.assert:
+    that:
+      - nginx_version is defined
+
+- name: Install nginx
+  ansible.builtin.apt:
+    name: "nginx={{ nginx_version }}"
+    state: present
+    update_cache: true
+    allow_downgrade: true
+
+- name: Enable NGINX service
+  ansible.builtin.service:
+    name: nginx
+    enabled: true

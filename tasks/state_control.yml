@@ -1,0 +1,9 @@
+- name: Validate variables for state_control.yml task
+  ansible.builtin.assert:
+    that:
+      - nginx_state_action in nginx_supported_states
+
+- name: Control nginx daemon
+  ansible.builtin.service:
+    name: nginx
+    state: "{{ nginx_state_action }}"

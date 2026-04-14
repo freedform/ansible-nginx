@@ -1,0 +1,45 @@
+- name: Validate variables for deploy_config.yml task
+  ansible.builtin.assert:
+    that:
+      - nginx_config_list is defined
+      - nginx_file_owner is defined
+      - nginx_file_group is defined
+      - nginx_main_config_path is defined
+      - nginx_base_dir is defined
+      - nginx is mapping
+
+- name: Backup the current configuration
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ item }}.{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
+    remote_src: true
+    mode: preserve
+  with_items: "{{ nginx_config_list }}"
+
+- name: Deploy NGINX main config
+  ansible.builtin.template:
+    src: "nginx.conf.j2"
+    dest: "{{ nginx_main_config_path }}"
+    owner: "{{ nginx_file_owner }}"
+    group: "{{ nginx_file_group }}"
+    mode: "0644"
+
+- name: Deloy NGINX ACLs
+  ansible.builtin.template:
+    src: "acl.j2"
+    dest: "{{ nginx_base_dir }}/{{ item }}"
+    owner: "{{ nginx_file_owner }}"
+    group: "{{ nginx_file_group }}"
+    mode: "0644"
+  vars:
+    acl: "{{ nginx_acls[item] }}"
+  with_items: "{{ nginx_acls.keys() | list }}"
+  when:
+    - nginx_acls is defined
+    - nginx_acls is mapping
+
+- name: Validate NGINX configuration
+  ansible.builtin.command: "nginx -t -c {{ nginx_main_config_path }}"
+  register: nginx_validation
+  failed_when: nginx_validation.rc != 0
+  changed_when: nginx_validation.rc != 0

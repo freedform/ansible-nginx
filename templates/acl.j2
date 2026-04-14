@@ -1,0 +1,11 @@
+{% if acl is mapping %}
+{% for action_name, action_items in acl.items() %}
+{% if action_items is iterable and action_items is not string %}
+{% for action_item in action_items%}
+{{ action_name }} {{ action_item }};
+{% endfor %}
+{% else %}
+{{ action_name }} {{ action_items }};
+{% endif %}
+{% endfor %}
+{% endif %}

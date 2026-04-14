@@ -1,0 +1,22 @@
+---
+- name: Create nginx_action_list
+  ansible.builtin.set_fact:
+    nginx_action_list: "{{ nginx_actions.split(',') }}"
+
+- name: Validate nginx_action_list
+  ansible.builtin.assert:
+    that:
+      - nginx_action_list | length > 0
+      - nginx_action_list | difference(nginx_supported_actions) | length == 0
+
+- name: Install NGINX
+  when: "'install' in nginx_action_list"
+  ansible.builtin.include_tasks: install.yml
+
+- name: Deploy configuration files
+  when: "'deploy_config' in nginx_action_list"
+  ansible.builtin.include_tasks: deploy_config.yml
+
+- name: Control nginx
+  when: "'state_control' in nginx_action_list"
+  ansible.builtin.include_tasks: state_control.yml
