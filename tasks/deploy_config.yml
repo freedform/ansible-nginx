@@ -8,14 +8,6 @@
       - nginx_base_dir is defined
       - nginx is mapping
 
-- name: Backup the current configuration
-  ansible.builtin.copy:
-    src: "{{ item }}"
-    dest: "{{ item }}.{{ lookup('pipe', 'date +%Y%m%d%H%M%S') }}"
-    remote_src: true
-    mode: preserve
-  with_items: "{{ nginx_config_list }}"
-
 - name: Deploy NGINX main config
   ansible.builtin.template:
     src: "nginx.conf.j2"
