@@ -1,7 +1,54 @@
+# @var nginx_actions:description: >
+# List of actions the role does, accepts one or more actions.
+# Use comma without spaces as a delimiter for multiple actions. 
+# @var nginx_actions:required: `true`
+# @var nginx_actions:type: String
+# @var nginx_actions:example: >
+#   nginx_actions: deploy_config
+#   nginx_actions: install,deploy_config
+# @end
+
+# @var nginx:description: Nginx config
+# @var nginx:required: `true`, only in case `nginx_actions: deploy_config`
+# @var nginx:type: dict
+# @var nginx:example: $>
+# {
+#   "global": {"parameter": "value"},
+#   "events": {"parameter": "value"},
+#   "http": {"parameter": "value"},
+#   "servers": {
+#     "vhost-1.example.com": {"http": {"parameter": "value"}, "https": {"parameter": "value"}},
+#     "vhost-2.example.com": {"http": {"parameter": "value"}, "https": {"parameter": "value"}}
+#   }
+# }
+# @end
+
+# @var nginx_state_action:description: Controls state of NGINX process
+# @var nginx_state_action:required: `true`, only in case `nginx_actions: state_control`
+# @var nginx_state_action:type: String
+# @var nginx_state_action:example: >
+#   nginx_state_action: reloaded
+#   nginx_state_action: started
+#   nginx_state_action: stopped
+# @end
+
+# @var nginx_version:description: NGINX version for installation
+# @var nginx_version:required: `true`, only in case `nginx_actions: install`
+# @var nginx_version:type: String
+# @end
 nginx_version: 1.24.0-2ubuntu7.6
+
+# @var nginx_base_dir:description: Main configuration directory
+# @var nginx_base_dir:type: String
+# @end
 nginx_base_dir: /etc/nginx
-nginx_main_config_path: "{{ nginx_base_dir }}/nginx.conf"
-nginx_config_list:
-  - "{{ nginx_main_config_path }}"
+
+# @var nginx_file_owner:description: NGINX files owner name
+# @var nginx_file_owner:type: String
+# @end
 nginx_file_owner: root
+
+# @var nginx_file_group:description: NGINX files group name
+# @var nginx_file_group:type: String
+# @end
 nginx_file_group: root

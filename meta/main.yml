@@ -1,6 +1,6 @@
 galaxy_info:
   author: freedform
-  description: nginx role
+  description: Role nginx gives full control over NGINX process and all its configuration files.
   min_ansible_version: "2.20"
   license: MIT
 

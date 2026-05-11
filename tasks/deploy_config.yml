@@ -1,17 +1,15 @@
 - name: Validate variables for deploy_config.yml task
   ansible.builtin.assert:
     that:
-      - nginx_config_list is defined
       - nginx_file_owner is defined
       - nginx_file_group is defined
-      - nginx_main_config_path is defined
       - nginx_base_dir is defined
       - nginx is mapping
 
 - name: Deploy NGINX main config
   ansible.builtin.template:
     src: "nginx.conf.j2"
-    dest: "{{ nginx_main_config_path }}"
+    dest: "{{ nginx_base_dir }}/nginx.conf"
     owner: "{{ nginx_file_owner }}"
     group: "{{ nginx_file_group }}"
     mode: "0644"
@@ -31,7 +29,7 @@
     - nginx_acls is mapping
 
 - name: Validate NGINX configuration
-  ansible.builtin.command: "nginx -t -c {{ nginx_main_config_path }}"
+  ansible.builtin.command: "nginx -t -c {{ nginx_base_dir }}/nginx.conf"
   register: nginx_validation
   failed_when: nginx_validation.rc != 0
   changed_when: nginx_validation.rc != 0
