@@ -14,22 +14,24 @@
     group: "{{ nginx_file_group }}"
     mode: "0644"
 
-- name: Deloy NGINX ACLs
+- name: Deploy NGINX ACLs
+  when:
+    - nginx_acls is defined
+    - nginx_acls is mapping
   ansible.builtin.template:
     src: "acl.j2"
-    dest: "{{ nginx_base_dir }}/{{ item }}"
+    dest: "{{ nginx_base_dir }}/{{ nginx_acl }}"
     owner: "{{ nginx_file_owner }}"
     group: "{{ nginx_file_group }}"
     mode: "0644"
   vars:
-    acl: "{{ nginx_acls[item] }}"
-  with_items: "{{ nginx_acls.keys() | list }}"
-  when:
-    - nginx_acls is defined
-    - nginx_acls is mapping
+    acl: "{{ nginx_acls[nginx_acl] }}"
+  loop: "{{ nginx_acls.keys() | list }}"
+  loop_control:
+    loop_var: nginx_acl
 
 - name: Validate NGINX configuration
   ansible.builtin.command: "nginx -t -c {{ nginx_base_dir }}/nginx.conf"
   register: nginx_validation
   failed_when: nginx_validation.rc != 0
-  changed_when: nginx_validation.rc != 0
+  changed_when: false

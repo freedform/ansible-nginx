@@ -38,7 +38,7 @@ http {
 {# -------------------------------
     HTTP SERVERS SETTINGS
 -------------------------------- #}
-{% if nginx.servers is defined and  nginx.servers is mapping %}
+{% if nginx.servers is defined and nginx.servers is mapping %}
 {% for server_name, server in nginx.servers.items() %}
 {% for proto in ['http', 'https'] %}
 {% if server[proto] is defined %}
@@ -48,7 +48,6 @@ http {
         {% else -%}  
         server_name {{ server_name }};
         {% endif %}
-        
 {{ render_directives(server[proto], 8) }}
     }
 {% endif %}
