@@ -4,8 +4,7 @@
 {% if value is mapping %}
 {% for v_key, v_value in value.items() %}
 {{ " " * indent }}{{ key }} {{ v_key }} {
-{{ render_directives(v_value, indent + 4) }}
-{{ " " * indent }}}
+{{ render_directives(v_value, indent + 4) }}{{ " " * indent }}}
 {% endfor %}
 {% elif value is iterable and value is not string %}
 {% for item in value %}
@@ -25,8 +24,7 @@
     EVENTS
 -------------------------------- #}
 events {
-{{ render_directives(nginx.events, 4) }}
-}
+{{ render_directives(nginx.events, 4) }}}
 {# -------------------------------
     HTTP BLOCK
 -------------------------------- #}
@@ -43,13 +41,8 @@ http {
 {% for proto in ['http', 'https'] %}
 {% if server[proto] is defined %}
     server {
-        {% if server.alias is defined and server.alias is string -%}
-        server_name {{ server_name }} {{ server.alias }};
-        {% else -%}  
-        server_name {{ server_name }};
-        {% endif %}
-{{ render_directives(server[proto], 8) }}
-    }
+        server_name {{ server_name }}{% if server.alias is defined and server.alias is string %} {{ server.alias }}{% endif %};
+{{ render_directives(server[proto], 8) }}    }
 {% endif %}
 {% endfor %}
 {% endfor %}
