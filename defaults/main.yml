@@ -1,6 +1,6 @@
 # @var nginx_actions:description: >
 # List of actions the role does, accepts one or more actions.
-# Use comma without spaces as a delimiter for multiple actions. 
+# Use comma without spaces as a delimiter for multiple actions.
 # @var nginx_actions:required: `true`
 # @var nginx_actions:type: String
 # @var nginx_actions:example: >
@@ -33,7 +33,6 @@
 # @end
 
 # @var nginx_version:description: NGINX version for installation
-# @var nginx_version:required: `true`, only in case `nginx_actions: install`
 # @var nginx_version:type: String
 # @end
 nginx_version: 1.24.0-2ubuntu7.6
@@ -52,3 +51,16 @@ nginx_file_owner: root
 # @var nginx_file_group:type: String
 # @end
 nginx_file_group: root
+
+# @var nginx_acls:description: >
+# Optional mapping of ACL filenames to their directive content, deployed to nginx_base_dir.
+# Each value is a dict of directives where the value can be a string or a list of strings.
+# @var nginx_acls:type: Dict
+# @var nginx_acls:example: $>
+# {
+#   "geoblock.conf": {
+#     "allow": ["192.168.1.0/24", "10.0.0.0/8"],
+#     "deny": "all"
+#   }
+# }
+# @end
