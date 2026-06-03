@@ -1,13 +1,14 @@
 ---
 - name: Create nginx_action_list
   ansible.builtin.set_fact:
-    nginx_action_list: "{{ nginx_actions.split(',') }}"
+    nginx_action_list: "{{ (nginx_actions | default('')).split(',') | reject('equalto', '') | list }}"
 
 - name: Validate nginx_action_list
   ansible.builtin.assert:
     that:
       - nginx_action_list | length > 0
       - nginx_action_list | difference(nginx_supported_actions) | length == 0
+    fail_msg: "nginx_actions must be set to one or more of: {{ nginx_supported_actions | join(', ') }}"
 
 - name: Deploy NGINX
   ansible.builtin.include_tasks: "{{ task_name }}.yml"
