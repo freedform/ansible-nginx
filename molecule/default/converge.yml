@@ -1,4 +1,22 @@
 ---
+- name: Discover available nginx version
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Get available nginx version from apt
+      ansible.builtin.command:
+        cmd: bash -c "apt-cache show nginx | grep '^Version:' | head -1 | awk '{print $2}'"
+      register: nginx_apt_version
+      changed_when: false
+
+    - name: Set nginx_available_version fact
+      ansible.builtin.set_fact:
+        nginx_available_version: "{{ nginx_apt_version.stdout | trim }}"
+
 - name: Converge
   hosts: all
   gather_facts: false
@@ -7,7 +25,7 @@
       vars:
         nginx_actions: install,deploy_config,state_control
         nginx_state_action: started
-        nginx_version: 1.24.0-2ubuntu7.8
+        nginx_version: "{{ nginx_available_version }}"
         nginx:
           global:
             worker_processes: auto
@@ -16,3 +34,10 @@
           http:
             include: mime.types
             default_type: application/octet-stream
+          servers:
+            localhost:
+              http:
+                listen: 80
+                location:
+                  /:
+                    return: "200 'ok'"

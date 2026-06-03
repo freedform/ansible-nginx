@@ -1,0 +1,49 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Stat nginx binary
+      ansible.builtin.stat:
+        path: /usr/sbin/nginx
+      register: nginx_binary
+
+    - name: Assert nginx is installed
+      ansible.builtin.assert:
+        that: nginx_binary.stat.exists
+        fail_msg: "/usr/sbin/nginx should exist"
+
+    - name: Stat nginx.conf
+      ansible.builtin.stat:
+        path: /etc/nginx/nginx.conf
+      register: nginx_conf
+
+    - name: Assert nginx.conf exists
+      ansible.builtin.assert:
+        that: nginx_conf.stat.exists
+        fail_msg: "/etc/nginx/nginx.conf should exist"
+
+    - name: Assert nginx.conf has mode 0644
+      ansible.builtin.assert:
+        that: "nginx_conf.stat.mode == '0644'"
+        fail_msg: "/etc/nginx/nginx.conf should have mode 0644"
+
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Assert nginx service is running
+      ansible.builtin.assert:
+        that: "ansible_facts.services['nginx.service'].state == 'running'"
+        fail_msg: "nginx.service should be running"
+
+    - name: Check nginx responds on port 80
+      ansible.builtin.uri:
+        url: http://localhost/
+        status_code: 200
+        return_content: true
+      register: http_response
+
+    - name: Assert HTTP response body is ok
+      ansible.builtin.assert:
+        that: "http_response.content == 'ok'"
+        fail_msg: "nginx should return 'ok' on GET /"
