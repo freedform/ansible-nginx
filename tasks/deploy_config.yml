@@ -4,8 +4,8 @@
       - nginx_file_owner is defined
       - nginx_file_group is defined
       - nginx_base_dir is defined
-      - nginx is defined
-      - nginx is mapping
+      - nginx_config is defined
+      - nginx_config is mapping
 
 - name: Deploy NGINX main config
   ansible.builtin.template:

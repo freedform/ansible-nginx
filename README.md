@@ -6,10 +6,10 @@ Role nginx gives full control over NGINX process and all its configuration files
 
 - [Requirements](#requirements)
 - [Default Variables](#default-variables)
-  - [nginx](#nginx)
   - [nginx_acls](#nginx_acls)
   - [nginx_actions](#nginx_actions)
   - [nginx_base_dir](#nginx_base_dir)
+  - [nginx_config](#nginx_config)
   - [nginx_file_group](#nginx_file_group)
   - [nginx_file_owner](#nginx_file_owner)
   - [nginx_state_action](#nginx_state_action)
@@ -25,36 +25,6 @@ Role nginx gives full control over NGINX process and all its configuration files
 - Minimum Ansible version: `2.20`
 
 ## Default Variables
-
-### nginx
-
-Nginx config
-
-**_Required:_** `true`, only in case `nginx_actions: deploy_config`<br />
-**_Type:_** dict<br />
-
-#### Example usage
-
-```YAML
-nginx:
-  global:
-    parameter: value
-  events:
-    parameter: value
-  http:
-    parameter: value
-  servers:
-    vhost-1.example.com:
-      http:
-        parameter: value
-      https:
-        parameter: value
-    vhost-2.example.com:
-      http:
-        parameter: value
-      https:
-        parameter: value
-```
 
 ### nginx_acls
 
@@ -99,6 +69,36 @@ Main configuration directory
 
 ```YAML
 nginx_base_dir: /etc/nginx
+```
+
+### nginx_config
+
+Nginx config
+
+**_Required:_** `true`, only in case `nginx_actions: deploy_config`<br />
+**_Type:_** dict<br />
+
+#### Example usage
+
+```YAML
+nginx_config:
+  global:
+    parameter: value
+  events:
+    parameter: value
+  http:
+    parameter: value
+  servers:
+    vhost-1.example.com:
+      http:
+        parameter: value
+      https:
+        parameter: value
+    vhost-2.example.com:
+      http:
+        parameter: value
+      https:
+        parameter: value
 ```
 
 ### nginx_file_group

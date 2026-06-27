@@ -19,12 +19,12 @@
 {# -------------------------------
     GLOBAL (top-level directives)
 -------------------------------- #}
-{{ render_directives(nginx.global) }}
+{{ render_directives(nginx_config.global) }}
 {# -------------------------------
     EVENTS
 -------------------------------- #}
 events {
-{{ render_directives(nginx.events, 4) }}}
+{{ render_directives(nginx_config.events, 4) }}}
 {# -------------------------------
     HTTP BLOCK
 -------------------------------- #}
@@ -32,12 +32,12 @@ http {
 {# -------------------------------
     GLOBAL HTTP SETTINGS
 -------------------------------- #}
-{{ render_directives(nginx.http, 4) }}
+{{ render_directives(nginx_config.http, 4) }}
 {# -------------------------------
     HTTP SERVERS SETTINGS
 -------------------------------- #}
-{% if nginx.servers is defined and nginx.servers is mapping %}
-{% for server_name, server in nginx.servers.items() %}
+{% if nginx_config.servers is defined and nginx_config.servers is mapping %}
+{% for server_name, server in nginx_config.servers.items() %}
 {% for proto in ['http', 'https'] %}
 {% if server[proto] is defined %}
     server {

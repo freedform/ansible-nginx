@@ -8,10 +8,10 @@
 #   nginx_actions: install,deploy_config
 # @end
 
-# @var nginx:description: Nginx config
-# @var nginx:required: `true`, only in case `nginx_actions: deploy_config`
-# @var nginx:type: dict
-# @var nginx:example: $>
+# @var nginx_config:description: Nginx config
+# @var nginx_config:required: `true`, only in case `nginx_actions: deploy_config`
+# @var nginx_config:type: dict
+# @var nginx_config:example: $>
 # {
 #   "global": {"parameter": "value"},
 #   "events": {"parameter": "value"},
