@@ -1,0 +1,39 @@
+---
+- name: Discover available nginx version
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Get available nginx version from apt
+      ansible.builtin.command:
+        cmd: bash -c "apt-cache show nginx | grep '^Version:' | head -1 | awk '{print $2}'"
+      register: nginx_apt_version
+      changed_when: false
+
+    - name: Set nginx_available_version fact
+      ansible.builtin.set_fact:
+        nginx_available_version: "{{ nginx_apt_version.stdout | trim }}"
+
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}"
+      vars:
+        nginx_actions: install,deploy_config
+        nginx_version: "{{ nginx_available_version }}"
+        nginx_config:
+          global:
+            worker_processes: auto
+          events:
+            worker_connections: 1024
+          http:
+            include: mime.types
+            default_type: application/octet-stream
+        nginx_acls:
+          geoblock.conf:
+            allow: 192.168.1.0/24
+            deny: all

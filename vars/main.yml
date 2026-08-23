@@ -2,6 +2,7 @@ nginx_supported_actions:
   - install
   - deploy_config
   - state_control
+  - remove
 nginx_supported_states:
   - started
   - stopped

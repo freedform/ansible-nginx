@@ -1,0 +1,16 @@
+- name: Validate variables for remove.yml task
+  ansible.builtin.assert:
+    that:
+      - nginx_base_dir is defined
+
+- name: Remove nginx package and purge its config files
+  ansible.builtin.apt:
+    name: nginx
+    state: absent
+    purge: true
+    autoremove: true
+
+- name: Remove leftover NGINX config directory
+  ansible.builtin.file:
+    path: "{{ nginx_base_dir }}"
+    state: absent
